@@ -1,0 +1,80 @@
+# This Menu created with YUMI (Your Universal Multiboot Installer) http://www.pendrivelinux.com
+default 1
+timeout 30
+color NORMAL HIGHLIGHT HELPTEXT HEADING
+splashimage=/multiboot/menu/yumi.xpm.gz
+foreground=FFFFFF
+background=000000
+title --- Bootable ISOs + Windows XP/Vista/7/8 ---
+root
+title <-- Back to Main Menu
+root (hd0,0)
+chainloader (hd0)+1
+rootnoverify (hd0)
+
+#start Arch Linux
+title Boot Arch Linux ISO
+partnew (hd0,3) 0x00 (hd0,0)/multiboot/ISOS/archlinux-2017.01.01-dual.iso
+map --heads=0 --sectors-per-track=0 (hd0,0)/multiboot/ISOS/archlinux-2017.01.01-dual.iso (0xff)
+map --hook
+root (0xff)
+chainloader (0xff)
+#end Arch Linux ISO
+
+#start LxPupTahr-15.05.2-pae
+#Modify the following entry if it does not boot
+title Boot LxPupTahr-15.05.2-pae.iso
+partnew (hd0,3) 0x00 (hd0,0)/multiboot/ISOS/LxPupTahr-15.05.2-pae.iso
+map --heads=0 --sectors-per-track=0 (hd0,0)/multiboot/ISOS/LxPupTahr-15.05.2-pae.iso (0xff)
+map --hook
+root (0xff)
+chainloader (0xff)
+#end LxPupTahr-15.05.2-pae
+
+#start bitdefender-rescue-cd
+title start bitdefender-rescue-cd
+partnew (hd0,3) 0x00 (hd0,0)/multiboot/ISOS/bitdefender-rescue-cd.iso
+map --heads=0 --sectors-per-track=0 (hd0,0)/multiboot/ISOS/bitdefender-rescue-cd.iso (0xff)
+map --hook
+root (0xff)
+chainloader (0xff)
+#end bitdefender-rescue-cd
+
+#start g4l-v0.51
+#Modify the following memory based entry if it does not boot
+title Boot g4l-v0.51.iso from Memory
+find --set-root --ignore-floppies --ignore-cd /multiboot/ISOS/g4l-v0.51.iso
+map --heads=0 --sectors-per-track=0 --mem /multiboot/ISOS/g4l-v0.51.iso (hd32)
+map --hook
+root (hd32)
+chainloader (hd32)
+#end g4l-v0.51
+
+#start clonezilla
+title clonezilla
+partnew (hd0,3) 0x00 (hd0,0)/multiboot/ISOS/clonezilla.iso
+map --heads=0 --sectors-per-track=0 (hd0,0)/multiboot/ISOS/clonezilla.iso (0xff)
+map --hook
+root (0xff)
+chainloader (0xff)
+#end clonezilla
+
+#start Tails Linux
+title Boot Tails Linux ISO
+partnew (hd0,3) 0x00 (hd0,0)/multiboot/ISOS/tails-i386-2.9.1.iso
+map --heads=0 --sectors-per-track=0 (hd0,0)/multiboot/ISOS/tails-i386-2.9.1.iso (0xff)
+map --hook
+root (0xff)
+chainloader (0xff)
+#end Tails Linux ISO
+
+#start TinyCorePlus (Don't use; startx problem)
+#Modify the following memory based entry if it does not boot
+title TinyCorePlus
+partnew (hd0,3) 0x00 (hd0,0)/multiboot/ISOS/TinyCorePlus.iso
+map --heads=0 --sectors-per-track=0 (hd0,0)/multiboot/ISOS/TinyCorePlus.iso (0xff)
+map --hook
+root (0xff)
+chainloader (0xff)
+#end TinyCorePlus
+
