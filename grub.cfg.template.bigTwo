@@ -1,0 +1,303 @@
+##global setting
+insmod search_fs_uuid
+
+## path to the partition holding ISO images (using UUID)
+#probe -u $root --set=rootuuid
+#set imgdevpath="/dev/disk/by-uuid/$rootuuid"
+
+## but I prefer set UUID directly
+set imgdevpath="/dev/disk/by-uuid/A9D5-2206"
+# for USB, the following may be useful
+# LABEL="GRUB2EFI"
+# UUID="A9D5-2206"
+# TYPE="vfat"
+# PARTUUID="4155c865-5a7f-4984-bca6-3320f008484c"
+
+menuentry 'Mint  Mate amd64' {
+	set isofile="/iso/linuxmint.iso"
+	loopback loop $isofile
+	linux (loop)/casper/vmlinuz boot=casper iso-scan/filename=$isofile liveimg noprompt noeject quiet splash --
+	initrd (loop)/casper/initrd.lz
+}
+
+menuentry 'CloneZilla Live to RAM' {
+	set isofile="/iso/clonezilla.iso"
+	loopback loop $isofile
+  	linux (loop)/live/vmlinuz boot=live union=overlay username=user hostname=yakkety config quiet components noswap edd=on nomodeset nodmraid ocs_live_run=\"ocs-live-general\" ocs_live_extra_param=\"\" keyboard-layouts= ocs_live_batch=\"no\" vga=791 toram=filesystem.squashfs ip= net.ifnames=0  splash i915.blacklist=yes radeonhd.blacklist=yes nouveau.blacklist=yes vmwgfx.enable_fbdev=1 findiso=$isofile
+  	initrd (loop)/live/initrd.img
+}
+
+menuentry 'Tails' --class debian --class gnu-linux --class gnu --class os {
+#         insmod part_msdos
+#         insmod ext2
+#         insmod loopback
+#         insmod iso9660
+         set isofile="/iso/tails.iso"
+         set root='(hd0,gpt1)'
+         search --no-floppy --fs-uuid --set=root A9D5-2206
+         loopback loop $isofile
+         linux (loop)/live/vmlinuz2 boot=live findiso=$isofile config live-media=removable apparmor=1 security=apparmor nopersistence noprompt timezone=Etc/UTC block.events_df_poll_msecs=1000 module=Tails kaslr slab_nomerge slub_debug=FZ mce=0 vsyscall=none
+         initrd (loop)/live/initrd2.img
+#         linux   (loop)/live/vmlinuz boot=live findiso=$isofile config
+#         initrd  (loop)/live/initrd.img
+   }
+
+menuentry 'Arch Linux 1017-01-01' {
+	set isofile="/iso/archlinux.iso"
+	loopback loop $isofile
+	linux (loop)/arch/boot/x86_64/vmlinuz archisodevice=/dev/loop0 img_dev=$imgdevpath img_loop=$isofile earlymodules=loop
+	initrd (loop)/arch/boot/x86_64/archiso.img
+}
+
+menuentry 'TinyCore' {
+	set isofile="/iso/TinyCore.iso"
+	loopback loop $isofile
+	linux (loop)/boot/vmlinuz loglevel=3 cde iso="/mnt/sdb1/iso/TinyCore.iso"
+	initrd (loop)/boot/core.gz
+}
+
+menuentry 'TinyCorePlus' {
+	set isofile="/iso/TinyCorePlus.iso"
+	loopback loop $isofile
+	linux (loop)/boot/vmlinuz loglevel=3 cde iso="/mnt/sdb1/iso/TinyCorePlus.iso"
+	initrd (loop)/boot/core.gz
+}
+
+menuentry "BitDefender" {
+	set isofile="/iso/bitdefender.iso"
+	set SQUASH="/rescue/livecd.squashfs"
+	loopback cdrom $isofile
+	linux (cdrom)/boot/kernel.x86_64-efi  root=/dev/ram0 real_root=/dev/loop0 loop=$SQUASH cdroot_maker=$SQUASH initrd udev cdroot  scandelay=5 lang=en quiet splash isoboot=$isofile
+	initrd (cdrom)/boot/initfs.x86_64-efi
+}
+
+menuentry 'MacPuppy in RAM' {
+	linux /iso/MacPuppy/vmlinuz root=/dev/ram0 pfix=ram pmedia=usbflash psubdir=/iso/MacPuppy
+	initrd /iso/MacPuppy/initrd.gz
+}
+
+menuentry 'Parrot Linux' {
+	set isofile="/iso/Parrot.iso"
+	loopback loop $isofile
+	linux (loop)/live/vmlinuz boot=live config findiso=$isofile
+	initrd (loop)/live/initrd.img
+}
+
+menuentry "Antergos" {
+        iso_path="/iso/antergos.iso"
+        search --no-floppy --file ${iso_path} --set
+        live_args="for-arch --> img_loop=${iso_path}  img_dev=/dev/sdb1 earlymodules=loop modules-load=loop rd.modules-load=loop udev.log-priority=crit rd.udev.log-priority=crit"
+        custom_args=""
+        iso_args="archisobasedir=arch archisolabel=ANTERGOS"
+        loopback loop ${iso_path}
+        linux (loop)/arch/boot/vmlinuz ${live_args} ${custom_args} ${iso_args}
+        initrd (loop)/arch/boot/intel_ucode.img (loop)/arch/boot/archiso.img
+}
+
+menuentry "PepperMint" {
+   set isofile="/iso/Peppermint.iso"
+   loopback loop $isofile
+   linux (loop)/casper/vmlinuz.efi file=/cdrom/preseed/mint.seed boot=casper initrd=/casper/initrd.lz iso-scan/filename=$isofile noeject
+   initrd (loop)/casper/initrd.lz
+}
+
+menuentry "PIXEL - live" {
+set isofile="/iso/pixel.iso"
+loopback loop $isofile
+linux (loop)/live/vmlinuz2 boot=live config findiso=${isofile}
+initrd (loop)/live/initrd2.img
+}
+
+menuentry 'Linux Lite 64' {
+	set isofile="/iso/Linux_Lite.iso"
+	loopback loop $isofile
+	linux (loop)/casper/vmlinuz boot=casper iso-scan/filename=$isofile liveimg noprompt noeject quiet splash --
+	initrd (loop)/casper/initrd.gz
+}
+
+menuentry "---" { true; }
+
+menuentry "Live elementary OS without installing" {
+	set isofile="/iso/elementaryos.iso"
+	loopback loop $isofile
+	linux (loop)/casper/vmlinuz boot=casper iso-scan/filename=$isofile liveimg noprompt noeject quiet splash --
+	initrd (loop)/casper/initrd.lz
+}
+menuentry "Install elementary OS" {
+	set isofile="/iso/elementaryos.iso"
+	loopback loop $isofile
+	linux (loop)/casper/vmlinuz boot=casper iso-scan/filename=$isofile liveimg noprompt noeject quiet splash --
+#	linux	(loop)/casper/vmlinuz  file=(loop)/preseed/ubuntu.seed boot=(loop)/casper only-ubiquity quiet splash ---
+	initrd	(loop)/casper/initrd.lz
+}
+
+menuentry "---" { true; }
+
+menuentry "FatDog64 ISO" {
+	set isofile="/iso/Fatdog64.iso"
+	loopback loop $isofile
+	linux (loop)/vmlinuz rootfstype=ramfs
+	initrd (loop)/initrd
+}
+
+submenu "FatDog64 menu" {
+	menuentry "FatDog64 USB" {
+		set isofile="/iso/Fatdog64.iso"
+		loopback loop $isofile
+		linux (loop)/vmlinuz rootfstype=ramfs waitdev=5 savefile=ram:local
+		#	linux (loop)/vmlinuz rootfstype=ramfs savefile=ram:local
+		#	linux (loop)/vmlinuz rootfstype=ramfs savefile=ram:usb
+		#	linux (loop)/vmlinuz rootfstype=ramfs waitdev=5
+		initrd (loop)/initrd
+	} # This entry adds 'waitdev=5' to ensure that USB devices are ready
+	  # The 'waitdev=5' is important for this USB's setup
+
+	menuentry "FatDog64 no save" {
+		set isofile="/iso/Fatdog64.iso"
+		loopback loop $isofile
+		linux (loop)/vmlinuz rootfstype=ramfs savefile=none
+		initrd (loop)/initrd
+	} # Start Fatdog without using a savefile.
+
+	menuentry "FatDog64 Command Line" {
+		set isofile="/iso/Fatdog64.iso"
+		loopback loop $isofile
+		linux (loop)/vmlinuz rootfstype=ramfs pfix=nox
+		initrd (loop)/initrd
+	} # Start Fatdog in command-line mode (Linux console).
+      #Graphical desktop later can be started by typing "xwin".
+
+	menuentry "FatDog64 LVM" {
+		set isofile="/iso/Fatdog64.iso"
+		loopback loop $isofile
+		linux (loop)/vmlinuz rootfstype=ramfs withlvm withmdadm
+		initrd (loop)/initrd
+	} # Start Fatdog with LVM and mdadm (Linux software RAID) support.
+
+	menuentry "---" { true; }
+	menuentry "Firmware configuration" {
+		fwsetup
+	}
+
+	menuentry "Shutdown" {
+		halt
+	}
+
+	menuentry "Reboot" {
+		reboot
+	}
+
+	menuentry "---" { true; }
+	menuentry "For problematic Radeon cards - disable radeon driver" {
+		set isofile="/iso/Fatdog64.iso"
+		loopback loop $isofile
+		linux (loop)/vmlinuz rootfstype=ramfs blacklist=radeon
+		initrd (loop)/initrd
+	}
+
+	menuentry "For problematic Nvidia cards - disable nouveau driver" {
+		set isofile="/iso/Fatdog64.iso"
+		loopback loop $isofile
+		linux (loop)/vmlinuz rootfstype=ramfs blacklist=nouveau
+		initrd (loop)/initrd
+	}
+
+	submenu "More options for machines with severe video problems" {
+		menuentry "Set video resolution to 640x480" {
+			terminal_output console
+			set gfxmode=640x480
+			set gfxpayload=keep
+			terminal_output gfxterm
+		}
+		menuentry "Set video resolution to 800x600" {
+			terminal_output console
+			set gfxmode=800x600
+			set gfxpayload=keep
+			terminal_output gfxterm
+		}
+		menuentry "Set video resolution to 1024x768" {
+			terminal_output console
+			set gfxmode=1024x768
+			set gfxpayload=keep
+			terminal_output gfxterm
+		}
+		menuentry "List all supported video resolution" {
+			videoinfo
+			echo "Press Enter to continue ..."
+			read
+		}
+		menuentry "Use video resolution not listed in this menu" {
+			echo "Enter video resolution (WxH e.g. 800x600), press Enter to abort."
+			read gfxmode
+			terminal_output console
+			set gfxpayload=keep
+			terminal_output gfxterm
+		}
+		menuentry "Start Fatdog64 with the chosen resolution" {
+			set isofile="/iso/Fatdog64.iso"
+			loopback loop $isofile
+			linux (loop)/vmlinuz rootfstype=ramfs nomodeset pfix=xorgwizard savefile=none
+			initrd (loop)/initrd
+		}
+	}
+
+}
+
+#menuentry 'G4L (won't work under EFI )' {
+#	set isofile="/iso/g4l-v0.52.iso"
+#	loopback loop $isofile
+#	linux (loop)/bz4x7.4 root=/dev/ram0 telnetd=yes
+#	initrd (loop)/ramdisk.lzma
+#}
+
+
+submenu "Boot em HD " {
+	#menuentry "Reboot em USB" {
+	#	set root="(hd0)"
+	#	chainloader +1
+	#}
+	menuentry "HD1 MBR" {
+		set root="(hd1)"
+		chainloader +1
+	}
+	menuentry "HD1 Particao 1" {
+		set root="(hd1,msdos1)"
+		chainloader +1
+	}
+	menuentry "HD1 Particao 2" {
+		set root="(hd1,msdos2)"
+		chainloader +1
+	}
+	menuentry "HD1 Particao 3" {
+		set root="(hd1,msdos3)"
+		chainloader +1
+	}
+	menuentry "HD2 MBR" {
+		set root="(hd2)"
+		chainloader +1
+	}
+	menuentry "HD2 Particao 1" {
+		set root="(hd2,msdos1)"
+		chainloader +1
+	}
+	menuentry "HD2 Particao 2" {
+		set root="(hd2,msdos2)"
+		chainloader +1
+	}
+	menuentry "HD2 Particao 3" {
+		set root="(hd2,msdos3)"
+		chainloader +1
+	}
+}
+
+menuentry "Grub4dos - HBCD+"{
+	# mudar (hd0,2) ou outros para diferentes computadores...
+
+	setroot=(hd0,1)
+	linux /boot/grub4dos/grub.exe
+}
+
+
+# Note: MEMTEST won't work under EFI
+
+

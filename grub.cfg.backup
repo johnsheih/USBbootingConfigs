@@ -19,6 +19,13 @@ menuentry "Linux Mint ISO" {
 	initrd	(loop)/casper/initrd.lz
 }
 
+menuentry 'TinyCorePlus' {
+	set isofile="/iso/TinyCorePlus.iso"
+	loopback loop $isofile
+	linux (loop)/boot/vmlinuz loglevel=3 cde iso="/mnt/sdb1/iso/TinyCorePlus.iso"
+	initrd (loop)/boot/core.gz
+}
+
 menuentry 'MacPuppy in RAM' {
 	linux /iso/MacPuppy/vmlinuz root=/dev/ram0 pfix=ram pmedia=usbflash psubdir=/iso/MacPuppy
 	initrd /iso/MacPuppy/initrd.gz
@@ -37,20 +44,6 @@ menuentry "BitDefender" {
 	loopback cdrom $isofile
 	linux (cdrom)/boot/kernel.x86_64-efi  root=/dev/ram0 real_root=/dev/loop0 loop=$SQUASH cdroot_maker=$SQUASH initrd udev cdroot  scandelay=5 lang=en quiet splash isoboot=$isofile
 	initrd (cdrom)/boot/initfs.x86_64-efi
-}
-
-menuentry "TinyCore Pure64" {
-	set iso_file=/iso/TinyCorePure64/TinyCorePure64.iso
-	loopback loop $iso_file
-	linux (loop)/boot/vmlinuz64 loglevel=3 vga=normal cde iso="/mnt/sdb1/iso/TinyCorePure64/TinyCorePure64.iso"
-	initrd (loop)/boot/corepure64.gz
-}
-
-menuentry 'TinyCorePlus' {
-	set isofile="/iso/TinyCorePlus.iso"
-	loopback loop $isofile
-	linux (loop)/boot/vmlinuz loglevel=3 cde iso="/mnt/sdb1/iso/TinyCorePlus.iso"
-	initrd (loop)/boot/core.gz
 }
 
 menuentry "---" { true; }
@@ -93,43 +86,6 @@ menuentry "Fatdog64 without graphical desktop" {
 }
 
 menuentry "---" { true; }
-
-# ---- Doesn't work -----------------------
-#menuentry 'G4L' {
-#	set isofile="/iso/g4l.iso"
-#	loopback loop $isofile
-#	linux (loop)/bz4x10.4 root=/dev/ram0 telnetd=yes
-#	initrd (loop)/ramdisk.lzma
-#}
-
-#menuentry 'G4L NOSMP' {
-#	set isofile="/iso/g4l.iso"
-#	loopback loop $isofile
-#	linux (loop)/bz4x10.4 root=/dev/ram0 telnetd=yes nosmp
-#	initrd (loop)/ramdisk.lzma
-#}
-
-#menuentry 'G4L FailSafe' {
-#	set isofile="/iso/g4l.iso"
-#	loopback loop $isofile
-#	linux (loop)/bz4x10.4 root=/dev/ram0 noapic noacpi pnpbios=off acpi=off pci=noacpi nosmp
-#	initrd (loop)/ramdisk.lzma
-#}
-# ------------------------------------------
-
-# menuentry "---" { true; }
-
-# ---- Doesn't work -----------------------
-
-#menuentry 'FreeDOS' {
-#	set isofile="/iso/FreeDOS.iso"
-#	loopback loop $isofile
-#	linux (loop)/isolinux/memdisk nopassany
-#	initrd (loop)/isolinux/fdboot.img 
-#}
-
-# ------------------------------------------
-
 menuentry "Firmware configuration" {
 	fwsetup
 }
